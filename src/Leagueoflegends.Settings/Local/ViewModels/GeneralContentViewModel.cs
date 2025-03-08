@@ -30,7 +30,7 @@ public class GeneralContentViewModel : ViewModelBase, IViewFirstLoadable
         _optionData = optionData;
     }
 
-    public async void FirstLoaded(object view)
+    public async void OnFirstLoad(object view)
     {
         await Task.Delay(100);
         WindowSizes = _optionData.GetByCategory("WindowSize");

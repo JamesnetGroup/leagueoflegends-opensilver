@@ -28,22 +28,28 @@
     <Setter Property="HorizontalAlignment" Value="Stretch"/>
   </Style>
 
-  <Style TargetType="units:RiotChampGroupItem">
-    <Setter Property="IsExpanded" Value="True"/>
-    <Setter Property="ItemsBindingPath" Value="Children"/>
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="units:RiotChampGroupItem">
-          <StackPanel Margin="0,0,20,0">
-            <StackPanel Style="{StaticResource HorizStackPanelStyle}">
-              <TextBlock Style="{StaticResource HeaderTextStyle}" Text="{Binding Header}"/>
-              <TextBlock Style="{StaticResource CountTextStyle}" Text="{Binding Children.Count}"/>
-            </StackPanel>
-            <WrapPanel x:Name="PART_ItemsPanel" Style="{StaticResource ItemsPresenterStyle}"/>
-          </StackPanel>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
-
+    <Style TargetType="units:RiotChampGroupItem">
+        <Setter Property="IsExpanded" Value="True"/>
+        <Setter Property="ItemsSource" Value="{Binding Children}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="units:RiotChampGroupItem">
+                    <StackPanel Margin="0,0,20,0">
+                        <StackPanel Style="{StaticResource HorizStackPanelStyle}">
+                            <TextBlock Style="{StaticResource HeaderTextStyle}" Text="{Binding Header}"/>
+                            <TextBlock Style="{StaticResource CountTextStyle}" Text="{Binding Children.Count}"/>
+                        </StackPanel>
+                        <ItemsPresenter/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <WrapPanel Style="{StaticResource ItemsPresenterStyle}"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

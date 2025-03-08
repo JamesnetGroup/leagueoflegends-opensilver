@@ -96,7 +96,7 @@ public class ChampionsContentViewModel : ViewModelBase, IViewFirstLoadable
         );
     }
 
-    public async void FirstLoaded(object view)
+    public async void OnFirstLoad(object view)
     {
         await Task.Delay(50);
         InitializeViewModel();

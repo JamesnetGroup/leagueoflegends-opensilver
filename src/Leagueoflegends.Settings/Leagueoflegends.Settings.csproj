@@ -22,7 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenSilver" Version="3.1.0" />
+    <PackageReference Include="Jamesnet.Foundation" Version="9.1.0" />
+    <PackageReference Include="Jamesnet.Platform.OpenSilver" Version="9.1.0" />
+    <PackageReference Include="OpenSilver" Version="3.1.2" />
   </ItemGroup>
 
   <ItemGroup>

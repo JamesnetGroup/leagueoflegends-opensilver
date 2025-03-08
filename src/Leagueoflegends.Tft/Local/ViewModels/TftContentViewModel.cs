@@ -30,7 +30,7 @@ public class TftContentViewModel : ViewModelBase, IViewFirstLoadable
         _teamFightsData = teamFightsData;
     }
 
-    public void FirstLoaded(object view)
+    public void OnFirstLoad(object view)
     {
         Console.WriteLine("TftContentViewModel.FirstLoaded");
         TeamFights = _teamFightsData.LoadTeamFights();

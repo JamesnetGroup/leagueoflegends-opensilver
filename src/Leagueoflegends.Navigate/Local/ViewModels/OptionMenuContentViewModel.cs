@@ -21,7 +21,7 @@ public class OptionMenuContentViewModel : ViewModelBase, IViewFirstLoadable
         _menu.NavigateToOption(menuName);
     }
 
-    public void FirstLoaded(object view)
+    public void OnFirstLoad(object view)
     {
         _menu.NavigateToOption("General");
     }

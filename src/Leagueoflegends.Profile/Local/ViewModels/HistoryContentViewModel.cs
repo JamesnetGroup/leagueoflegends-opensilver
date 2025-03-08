@@ -71,7 +71,7 @@ public class HistoryContentViewModel : ViewModelBase, IViewFirstLoadable
         Recents = _RecentData.LoadRecents();
     }
 
-    public void FirstLoaded(object view)
+    public void OnFirstLoad(object view)
     {
         LoadData();
     }

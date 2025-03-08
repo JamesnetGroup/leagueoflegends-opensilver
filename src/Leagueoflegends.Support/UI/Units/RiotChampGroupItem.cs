@@ -1,9 +1,10 @@
 using Jamesnet.Platform.OpenSilver;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Leagueoflegends.Support.UI.Units;
 
-public class RiotChampGroupItem : RecursiveControl
+public class RiotChampGroupItem : TreeViewItem
 {
     public RiotChampGroupItem()
     {

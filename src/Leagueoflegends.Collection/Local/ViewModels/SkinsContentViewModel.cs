@@ -89,7 +89,7 @@ public class SkinsContentViewModel : ViewModelBase, IViewFirstLoadable
         );
     }
 
-    public void FirstLoaded(object view)
+    public void OnFirstLoad(object view)
     {
         InitializeViewModel();
     }

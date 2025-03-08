@@ -159,7 +159,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenSilver" Version="3.1.0" />
+    <PackageReference Include="Jamesnet.Foundation" Version="9.1.0" />
+    <PackageReference Include="Jamesnet.Platform.OpenSilver" Version="9.1.0" />
+    <PackageReference Include="OpenSilver" Version="3.1.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -397,10 +399,6 @@
     <Page Include="Themes\Units\VerticalMainMenuSeparator.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Jamesnet.Platform.OpenSilver\Jamesnet.Platform.OpenSilver.csproj" />
   </ItemGroup>
 
   <ItemGroup>

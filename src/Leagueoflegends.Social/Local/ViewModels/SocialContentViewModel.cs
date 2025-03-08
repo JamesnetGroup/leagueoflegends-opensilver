@@ -25,7 +25,7 @@ public class SocialContentViewModel : ViewModelBase, IViewFirstLoadable
         Friends = _friendsData.LoadFriends();
     }
 
-    public void FirstLoaded(object view)
+    public void OnFirstLoad(object view)
     {
         LoadFriends();
     }

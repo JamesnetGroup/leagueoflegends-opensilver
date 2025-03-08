@@ -38,7 +38,7 @@ public class MainContentViewModel : ViewModelBase, IViewFirstLoadable
         _menu.NavigateToMenu(menuName);
     }
 
-    public async void FirstLoaded(object view)
+    public async void OnFirstLoad(object view)
     {
         await Task.Delay(1000);
         SelectMenu("HOME");

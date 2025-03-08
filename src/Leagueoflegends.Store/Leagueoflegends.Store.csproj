@@ -8,11 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenSilver" Version="3.1.0" />
+    <PackageReference Include="Jamesnet.Foundation" Version="9.1.0" />
+    <PackageReference Include="Jamesnet.Platform.OpenSilver" Version="9.1.0" />
+    <PackageReference Include="OpenSilver" Version="3.1.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Local\Datas\StoreChampDataLoader.cs" />
     <Compile Include="Local\ViewModels\StoreChampContentViewModel.cs" />
     <Compile Include="UI\Views\StoreChampContent.cs" />
