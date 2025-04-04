@@ -63,7 +63,7 @@ document.createElementSafe = function (tagName, id, parent, index) {
     if (typeof parent === 'string') parent = document.getElementById(parent);
     if (parent == null) return null;
 
-    const element = document._createElement(tagName, id);
+    const element = document._createElement(tagName, id, parent.windowid);
 
     if (index < 0 || index >= parent.children.length) {
         parent.appendChild(element);
@@ -74,11 +74,15 @@ document.createElementSafe = function (tagName, id, parent, index) {
     return element;
 };
 
-document._createElement = function (tagName, id) {
+document._createElement = function (tagName, id, windowid) {
     const element = document.createElement(tagName);
     element.setAttribute('id', id);
     Object.defineProperty(element, 'xamlid', {
         value: id,
+        writable: false,
+    });
+    Object.defineProperty(element, 'windowid', {
+        value: windowid,
         writable: false,
     });
     Object.defineProperty(element, 'dump', {
@@ -91,12 +95,12 @@ document.createLayout = function (tagName, id, parentId, isKeyboardFocusable) {
     const parent = document.getElementById(parentId);
     if (!parent) return;
 
-    const element = document._createLayout(tagName, id, isKeyboardFocusable);
+    const element = document._createLayout(tagName, id, parent.windowid, isKeyboardFocusable);
     parent.appendChild(element);
 };
 
-document._createLayout = function (tagName, id, isKeyboardFocusable) {
-    const element = document._createElement(tagName, id);
+document._createLayout = function (tagName, id, windowid, isKeyboardFocusable) {
+    const element = document._createElement(tagName, id, windowid);
     element.classList.add('opensilver-uielement', 'uielement-unarranged');
     document.inputManager.addListeners(element, isKeyboardFocusable);
     return element;
@@ -113,7 +117,7 @@ document.createTextBlock = function (id, parentId) {
     const parent = document.getElementById(parentId);
     if (!parent) return;
 
-    const element = document._createLayout('div', id, false);
+    const element = document._createLayout('div', id, parent.windowid, false);
     element.classList.add('opensilver-textblock');
 
     parent.appendChild(element);
@@ -123,7 +127,7 @@ document.createBorder = function (id, parentId) {
     const parent = document.getElementById(parentId);
     if (!parent) return;
 
-    const element = document._createLayout('div', id, false);
+    const element = document._createLayout('div', id, parent.windowid, false);
     element.classList.add('opensilver-border');
 
     parent.appendChild(element);
@@ -133,19 +137,36 @@ document.createInkPresenter = function (id, canvasId, parentId) {
     const parent = document.getElementById(parentId);
     if (!parent) return;
 
-    const element = document._createLayout('div', id, false);
-    const canvas = document._createElement('canvas', canvasId);
+    const element = document._createLayout('div', id, parent.windowid, false);
+    const canvas = document._createElement('canvas', canvasId, parent.windowid);
     canvas.classList.add('opensilver-inkpresenter');
 
     element.appendChild(canvas);
     parent.appendChild(element);
 };
 
+document.createWindow = function (id, rootElementId) {
+    const rootElement = document.getElementById(rootElementId);
+    if (!rootElement) return;
+
+    // Set the window on the root element, used by popups
+    Object.defineProperty(rootElement, 'windowid', {
+        value: id,
+        writable: false,
+        configurable: true,
+    });
+
+    const w = document._createElement('div', id, id);
+    w.classList.add('opensilver-window');
+
+    rootElement.appendChild(w);
+};
+
 document.createPopupRoot = function (id, rootElementId, pointerEvents) {
     const rootElement = document.getElementById(rootElementId);
     if (!rootElement) return;
 
-    const popupRoot = document._createElement('div', id);
+    const popupRoot = document._createElement('div', id, rootElement.windowid);
     popupRoot.classList.add('opensilver-popup');
     popupRoot.style.pointerEvents = pointerEvents;
 
@@ -160,10 +181,10 @@ document.createImageManager = function (loadCallback, errorCallback) {
             const parent = document.getElementById(parentId);
             if (!parent) return;
 
-            const element = document._createLayout('div', id, false);
+            const element = document._createLayout('div', id, parent.windowid, false);
             element.style.lineHeight = '0px';
 
-            const img = document._createElement('img', imgId);
+            const img = document._createElement('img', imgId, parent.windowid);
             img.setAttribute('alt', ' ');
             img.style.display = 'none';
             img.style.width = 'inherit';
@@ -198,15 +219,26 @@ document.createImageManager = function (loadCallback, errorCallback) {
     };
 };
 
-document.createText = function (tagName, id, parentId) {
+document.createInline = function (tagName, id, parentId) {
     const parent = document.getElementById(parentId);
     if (!parent) return;
 
-    const textElement = document.createElement(tagName);
-    textElement.setAttribute('id', id);
-    textElement.classList.add('opensilver-textelement');
+    const inline = document.createElement(tagName);
+    inline.setAttribute('id', id);
+    inline.classList.add('opensilver-inline');
 
-    parent.appendChild(textElement);
+    parent.appendChild(inline);
+};
+
+document.createBlock = function (tagName, id, parentId) {
+    const parent = document.getElementById(parentId);
+    if (!parent) return;
+
+    const block = document.createElement(tagName);
+    block.setAttribute('id', id);
+    block.classList.add('opensilver-block');
+
+    parent.appendChild(block);
 };
 
 document.createShape = function (svgTagName, svgId, shapeId, defsId, parentId) {
@@ -220,6 +252,10 @@ document.createShape = function (svgTagName, svgId, shapeId, defsId, parentId) {
         value: svgId,
         writable: false,
     });
+    Object.defineProperty(svg, 'windowid', {
+        value: parent.windowid,
+        writable: false,
+    });
     Object.defineProperty(svg, 'dump', {
         get() { return document.dumpProperties(svgId); }
     });
@@ -228,6 +264,10 @@ document.createShape = function (svgTagName, svgId, shapeId, defsId, parentId) {
     shape.setAttribute('vector-effect', 'non-scaling-stroke');
     Object.defineProperty(shape, 'xamlid', {
         value: shapeId,
+        writable: false,
+    });
+    Object.defineProperty(shape, 'windowid', {
+        value: parent.windowid,
         writable: false,
     });
     svg.appendChild(shape);
@@ -287,6 +327,67 @@ document.drawSvgRadialGradient = function (id, cx, cy, r, units, spreadMethod, t
             radialGradient.appendChild(stop);
         }
     }
+};
+
+document.setSvgPatternNaturalSize = function (patternId, imageId, renderTargetId, alignX, alignY) {
+    const pattern = document.getElementById(patternId);
+    const image = document.getElementById(imageId);
+    const renderTarget = document.getElementById(renderTargetId);
+
+    if (!pattern || !image || !renderTarget) return;
+
+    const img = document.createElement('img');
+    img.src = image.getAttribute('href');
+    img.onload = function () {
+        const naturalWidth = img.naturalWidth;
+        const naturalHeight = img.naturalHeight;
+
+        image.setAttribute('width', naturalWidth);
+        image.setAttribute('height', naturalHeight);
+
+        const bounds = renderTarget.getBoundingClientRect();
+        const width = bounds.width;
+        const height = bounds.height;
+
+        switch (alignX) {
+            case 0: // AlignmentX.Left
+                viewBoxAlignX = 0;
+                break;
+
+            case 1: // AlignmentX.Center
+                viewBoxAlignX = (naturalWidth - width) / 2;
+                break;
+
+            case 2: // AlignmentX.Right
+                viewBoxAlignX = naturalWidth - width;
+                break;
+
+            default:
+                viewBoxAlignX = 0;
+                break;
+        }
+
+        let viewBoxAlignY;
+        switch (alignY) {
+            case 0: // AlignmentY.Top
+                viewBoxAlignY = 0;
+                break;
+
+            case 1: // AlignmentY.Center
+                viewBoxAlignY = (naturalHeight - height) / 2;
+                break;
+
+            case 2: // AlignmentY.Bottom
+                viewBoxAlignY = naturalHeight - height;
+                break;
+
+            default:
+                viewBoxAlignY = 0;
+                break;
+        }
+
+        pattern.setAttribute('viewBox', `${viewBoxAlignX} ${viewBoxAlignY} ${width} ${height}`);
+    };
 };
 
 document.arrangeRectangle = function (id, x, y, width, height) {
@@ -359,29 +460,6 @@ document.detachView = function (id) {
     }
 };
 
-document.removeEventListenerSafe = function (element, method, func) {
-    if (typeof element == 'string') {
-        element = document.getElementById(element);
-    }
-    if (element) {
-        element.removeEventListener(method, func);
-    }
-};
-
-document.addEventListenerSafe = function (element, method, func) {
-    if (typeof element == 'string') {
-        element = document.getElementById(element);
-    }
-    if (element) {
-        if (method == "touchstart" || method == "wheel" || method == "touchmove") {
-            element.addEventListener(method, func, { passive: true });
-        }
-        else {
-            element.addEventListener(method, func);
-        }
-    }
-};
-
 document.setFocus = function (element) {
     if (!element) return;
 
@@ -391,30 +469,27 @@ document.setFocus = function (element) {
     });
 };
 
-document.createInputManager = function (callback) {
+document.createInputManager = function (callback, pointerCallback) {
     if (document.inputManager) return;
 
     // This must remain synchronyzed with the EVENTS enum defined in InputManager.cs.
     // Make sure to change both files if you update this !
     const EVENTS = {
-        MOUSE_MOVE: 0,
-        MOUSE_LEFT_DOWN: 1,
-        MOUSE_LEFT_UP: 2,
-        MOUSE_RIGHT_DOWN: 3,
-        MOUSE_RIGHT_UP: 4,
-        MOUSE_ENTER: 5,
-        MOUSE_LEAVE: 6,
+        POINTER_MOVE: 0,
+        POINTER_LEFT_DOWN: 1,
+        POINTER_LEFT_UP: 2,
+        POINTER_RIGHT_DOWN: 3,
+        POINTER_RIGHT_UP: 4,
+        POINTER_ENTER: 5,
+        POINTER_LEAVE: 6,
         WHEEL: 7,
         KEYDOWN: 8,
         KEYUP: 9,
         KEYPRESS: 10,
-        TOUCH_START: 11,
-        TOUCH_END: 12,
-        TOUCH_MOVE: 13,
-        FOCUS_MANAGED: 14,
-        FOCUS_UNMANAGED: 15,
-        WINDOW_FOCUS: 16,
-        WINDOW_BLUR: 17,
+        FOCUS_MANAGED: 11,
+        FOCUS_UNMANAGED: 12,
+        WINDOW_FOCUS: 13,
+        WINDOW_BLUR: 14,
     };
 
     const MODIFIERKEYS = {
@@ -462,9 +537,8 @@ document.createInputManager = function (callback) {
     })();
 
     let _modifiers = MODIFIERKEYS.NONE;
-    let _mouseCapture = null;
+    let _pointerCapture = null;
     let _suppressContextMenu = false;
-    let _lastTouchEndTimeStamp = 0;
 
     function setModifiers(e) {
         _modifiers = MODIFIERKEYS.NONE;
@@ -478,70 +552,87 @@ document.createInputManager = function (callback) {
             _modifiers |= MODIFIERKEYS.WINDOWS;
     };
 
-    function getClosestElementId(element) {
+    function getClosestElement(element) {
         while (element) {
-            const xamlid = element.xamlid;
-            if (xamlid) {
-                return xamlid;
+            if (element.xamlid) {
+                return element;
             }
 
             element = element.parentElement;
         }
 
+        return null;
+    }
+
+    function getClosestElementId(element) {
+        const e = getClosestElement(element);
+        if (e) {
+            return e.xamlid;
+        }
         return '';
-    };
+    }
 
-    function shouldIgnoreMouseEvent(e) {
-        return e.timeStamp - _lastTouchEndTimeStamp < 500;
-    };
+    function invokePointerCallback(element, type, e) {
+        if (!element) {
+            callback('', type, e);
+            return;
+        }
 
-    function isTouchDevice() {
-        return (('ontouchstart' in window) ||
-            (navigator.maxTouchPoints > 0) ||
-            (navigator.msMaxTouchPoints > 0));
-    };
+        let pageX = e.pageX;
+        let pageY = e.pageY;
+
+        const parentWindow = document.getElementById(element.windowid);
+        if (parentWindow) {
+            const windowRect = parentWindow.getBoundingClientRect();
+            const bodyRect = document.body.getBoundingClientRect();
+            pageX -= (windowRect.left - bodyRect.left);
+            pageY -= (windowRect.top - bodyRect.top);
+        }
+
+        pointerCallback(getClosestElementId(element), type, e, e.pointerType === 'touch', pageX, pageY, _modifiers);
+    }
 
     function initDom() {
-        document.addEventListener('mousedown', function (e) {
+        document.addEventListener('pointerdown', function (e) {
             if (!e.isHandled) {
                 switch (e.button) {
                     case 0:
-                        callback('', EVENTS.MOUSE_LEFT_DOWN, e);
+                        callback('', EVENTS.POINTER_LEFT_DOWN, e);
                         break;
                     case 2:
-                        callback('', EVENTS.MOUSE_RIGHT_DOWN, e);
+                        callback('', EVENTS.POINTER_RIGHT_DOWN, e);
                         break;
                 }
             }
         });
 
-        document.addEventListener('mouseup', function (e) {
+        document.addEventListener('pointerup', function (e) {
             if (!e.isHandled) {
-                const target = _mouseCapture;
+                const target = _pointerCapture;
                 switch (e.button) {
                     case 0:
-                        callback(getClosestElementId(target), EVENTS.MOUSE_LEFT_UP, e);
+                        invokePointerCallback(getClosestElement(target), EVENTS.POINTER_LEFT_UP, e);
                         break;
                     case 2:
-                        callback(getClosestElementId(target), EVENTS.MOUSE_RIGHT_UP, e);
+                        invokePointerCallback(getClosestElement(target), EVENTS.POINTER_RIGHT_UP, e);
                         break;
                 }
             }
         });
 
-        document.addEventListener('mousemove', function (e) {
+        document.addEventListener('pointermove', function (e) {
             if (!e.isHandled) {
                 setModifiers(e);
-                const target = _mouseCapture;
+                const target = _pointerCapture;
                 if (target !== null) {
-                    callback(getClosestElementId(target), EVENTS.MOUSE_MOVE, e);
+                    invokePointerCallback(getClosestElement(target), EVENTS.POINTER_MOVE, e);
                 }
             }
         });
 
         document.addEventListener('contextmenu', function (e) {
             if (_suppressContextMenu ||
-                (_mouseCapture !== null && this !== _mouseCapture)) {
+                (_pointerCapture !== null && this !== _pointerCapture)) {
                 _suppressContextMenu = false;
                 e.preventDefault();
             }
@@ -565,6 +656,8 @@ document.createInputManager = function (callback) {
         registerRoot: function (root) {
             // Make sure the root div is keyboard focusable, so that we can tab into the app.
             root.tabIndex = Math.max(root.tabIndex, 0);
+
+            root.classList.add('opensilver-root-element');
 
             root.addEventListener('focusin', function (e) {
                 if (FocusManager.isManagingFocus) return;
@@ -593,51 +686,47 @@ document.createInputManager = function (callback) {
                 }
             });
 
-            root.addEventListener('mousemove', function (e) {
-                if (shouldIgnoreMouseEvent(e)) return;
-
+            root.addEventListener('pointermove', function (e) {
                 e.isHandled = true;
                 setModifiers(e);
-                const target = _mouseCapture || e.target;
-                callback(getClosestElementId(target), EVENTS.MOUSE_MOVE, e);
+                const target = _pointerCapture || e.target;
+                invokePointerCallback(getClosestElement(target), EVENTS.POINTER_MOVE, e);
             });
 
             root.addEventListener('wheel', function (e) {
                 // Zoom in/out request, takes priority over opensilver
                 if (e.ctrlKey) return;
+                // Only support vertical scroll
+                if (e.deltaY === 0) return;
                 e.isHandled = true;
                 setModifiers(e);
-                const target = _mouseCapture || e.target;
-                callback(getClosestElementId(target), EVENTS.WHEEL, e);
+                const target = _pointerCapture || e.target;
+                invokePointerCallback(getClosestElement(target), EVENTS.WHEEL, e);
             });
 
-            root.addEventListener('mousedown', function (e) {
-                if (shouldIgnoreMouseEvent(e)) return;
-
+            root.addEventListener('pointerdown', function (e) {
                 e.isHandled = true;
                 setModifiers(e);
-                let id = (_mouseCapture === null || e.target === _mouseCapture) ? getClosestElementId(e.target) : '';
+                const element = (_pointerCapture === null || e.target === _pointerCapture) ? getClosestElement(e.target) : null;
                 switch (e.button) {
                     case 0:
-                        callback(id, EVENTS.MOUSE_LEFT_DOWN, e);
+                        invokePointerCallback(element, EVENTS.POINTER_LEFT_DOWN, e);
                         break;
                     case 2:
-                        callback(id, EVENTS.MOUSE_RIGHT_DOWN, e);
+                        invokePointerCallback(element, EVENTS.POINTER_RIGHT_DOWN, e);
                         break;
                 }
             });
 
-            root.addEventListener('mouseup', function (e) {
-                if (shouldIgnoreMouseEvent(e)) return;
-
+            root.addEventListener('pointerup', function (e) {
                 e.isHandled = true;
-                const target = _mouseCapture || e.target;
+                const target = _pointerCapture || e.target;
                 switch (e.button) {
                     case 0:
-                        callback(getClosestElementId(target), EVENTS.MOUSE_LEFT_UP, e);
+                        invokePointerCallback(getClosestElement(target), EVENTS.POINTER_LEFT_UP, e);
                         break;
                     case 2:
-                        callback(getClosestElementId(target), EVENTS.MOUSE_RIGHT_UP, e);
+                        invokePointerCallback(getClosestElement(target), EVENTS.POINTER_RIGHT_UP, e);
                         break;
                 }
             });
@@ -645,43 +734,19 @@ document.createInputManager = function (callback) {
         addListeners: function (view, isFocusable) {
             if (!view) return;
 
-            view.addEventListener('mouseenter', function (e) {
-                if (_mouseCapture === null || this === _mouseCapture) {
+            view.addEventListener('pointerenter', function (e) {
+                if (_pointerCapture === null || this === _pointerCapture) {
                     setModifiers(e);
-                    callback(getClosestElementId(this), EVENTS.MOUSE_ENTER, e);
+                    invokePointerCallback(getClosestElement(this), EVENTS.POINTER_ENTER, e);
                 }
             });
 
-            view.addEventListener('mouseleave', function (e) {
-                if (_mouseCapture === null || this === _mouseCapture) {
+            view.addEventListener('pointerleave', function (e) {
+                if (_pointerCapture === null || this === _pointerCapture) {
                     setModifiers(e);
-                    callback(getClosestElementId(this), EVENTS.MOUSE_LEAVE, e);
+                    invokePointerCallback(getClosestElement(this), EVENTS.POINTER_LEAVE, e);
                 }
             });
-
-            if (isTouchDevice()) {
-                view.addEventListener('touchstart', function (e) {
-                    if (!e.isHandled) {
-                        e.isHandled = true;
-                        callback(getClosestElementId(this), EVENTS.TOUCH_START, e);
-                    }
-                }, { passive: true });
-
-                view.addEventListener('touchend', function (e) {
-                    if (!e.isHandled) {
-                        e.isHandled = true;
-                        callback(getClosestElementId(this), EVENTS.TOUCH_END, e);
-                        _lastTouchEndTimeStamp = e.timeStamp;
-                    }
-                });
-
-                view.addEventListener('touchmove', function (e) {
-                    if (!e.isHandled) {
-                        e.isHandled = true;
-                        callback(getClosestElementId(this), EVENTS.TOUCH_MOVE, e);
-                    }
-                }, { passive: true });
-            }
 
             if (isFocusable) {
                 view.addEventListener('keypress', function (e) {
@@ -711,13 +776,13 @@ document.createInputManager = function (callback) {
         getModifiers: function () {
             return _modifiers;
         },
-        captureMouse: function (element) {
-            _mouseCapture = element;
-            document.body.classList.add('opensilver-mouse-captured');
+        capturePointer: function (element) {
+            _pointerCapture = element;
+            document.body.classList.add('opensilver-pointer-captured');
         },
-        releaseMouseCapture: function () {
-            _mouseCapture = null;
-            document.body.classList.remove('opensilver-mouse-captured');
+        releasePointerCapture: function () {
+            _pointerCapture = null;
+            document.body.classList.remove('opensilver-pointer-captured');
         },
         suppressContextMenu: function (value) {
             _suppressContextMenu = value;
@@ -1082,18 +1147,8 @@ document.createTextviewManager = function (inputCallback, scrollCallback) {
             const parent = document.getElementById(parentId);
             if (!parent) return;
 
-            const view = document._createLayout('textarea', id, true);
-            view.style.fontSize = 'inherit';
-            view.style.fontFamily = 'inherit';
-            view.style.color = 'inherit';
-            view.style.letterSpacing = 'inherit';
-            view.style.resize = 'none';
-            view.style.border = 'none';
-            view.style.background = 'transparent';
-            view.style.cursor = 'text';
-            view.style.overflow = 'hidden';
-            view.style.tabSize = '4';
-            view.style.padding = '0px';
+            const view = document._createLayout('textarea', id, parent.windowid, true);
+            view.classList.add('opensilver-textboxview');
 
             view.setAttribute('tabindex', -1);
 
@@ -1122,14 +1177,8 @@ document.createTextviewManager = function (inputCallback, scrollCallback) {
             const parent = document.getElementById(parentId);
             if (!parent) return;
 
-            const view = document._createLayout('input', id, true);
-            view.style.border = 'none';
-            view.style.background = 'transparent';
-            view.style.fontFamily = 'inherit';
-            view.style.fontSize = 'inherit';
-            view.style.color = 'inherit';
-            view.style.letterSpacing = 'inherit';
-            view.style.padding = '0px';
+            const view = document._createLayout('input', id, parent.windowid, true);
+            view.classList.add('opensilver-passwordboxview');
 
             view.setAttribute('type', 'password');
             view.setAttribute('tabindex', -1);
@@ -1571,7 +1620,7 @@ document.createRichTextViewManager = function (selectionChangedCallback, content
             const parent = document.getElementById(parentId);
             if (!parent) return;
 
-            const view = document._createLayout('div', id, true);
+            const view = document._createLayout('div', id, parent.windowid, true);
             instances.set(id, view);
 
             view.addEventListener('scroll', function (e) { scrollCallback(this.id); });
@@ -1779,7 +1828,7 @@ document.htmlPresenterHelpers = (function () {
             const parent = document.getElementById(parentId);
             if (!parent) return;
 
-            const view = document._createLayout('div', id, false);
+            const view = document._createLayout('div', id, parent.windowid, false);
             const content = document.createElement('div');
             content.setAttribute('id', contentId);
             if (useShadowDom) {
@@ -1856,6 +1905,131 @@ document.createUIDispatcher = function (callback) {
         },
     };
 };
+
+document.createResizeManager = (function (onresizeCallback) {
+    const _observer = new ResizeObserver(onResize);
+    const _observedElements = new Map();
+
+    function onResize(entries) {
+        for (const entry of entries) {
+            const id = entry.target.id;
+
+            if (_observedElements.get(id) !== entry.target) {
+                continue;
+            }
+
+            onresizeCallback(id, entry.contentRect.width, entry.contentRect.height);
+        }
+    }
+
+    document.resizeManager = {
+        observe: function (element) {
+            if (element && element.id) {
+                _observedElements.set(element.id, element);
+                _observer.observe(element);
+            }
+        },
+        unobserve: function (id) {
+            const element = _observedElements.get(id);
+            if (_observedElements.delete(id)) {
+                _observer.unobserve(element);
+            }
+        },
+    }
+});
+
+document.openFileDialog = (function () {
+    const _dialogs = new Map();
+
+    return {
+        createDialog: function (id, changeCallback, changeCompleteCallback, cancelCallback) {
+            if (_dialogs.has(id)) {
+                throw new Error(`A dialog with id '${id}' has already been registered.`)
+            }
+
+            const dialog = document.createElement('input');
+            dialog.type = 'file';
+
+            dialog.addEventListener('change', function () {
+                if (dialog.files.length === 0) {
+                    changeCompleteCallback();
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                // Reading each file sequentially, some results were null when running concurrently
+                function readNext(i) {
+                    const file = dialog.files[i];
+
+                    reader.onload = function () {
+                        changeCallback(file.name, reader.result.substr(reader.result.indexOf(',') + 1));
+
+                        if (dialog.files.length > i + 1) {
+                            readNext(i + 1);
+                        } else {
+                            // Triggers finished callback
+                            changeCompleteCallback();
+                        }
+                    };
+
+                    // For performance improvements, readAsArrayBuffer could be used and Uint8Array sent to C#,
+                    // this has been optimized in .NET 6. However, this would require changes to the C# callback method,
+                    // the array cannot be received as object (must be byte[]).
+                    reader.readAsDataURL(file);
+                }
+
+                readNext(0);
+            });
+
+            dialog.addEventListener('cancel', function () {
+                cancelCallback();
+            });
+
+            _dialogs.set(id, dialog);
+        },
+        deleteDialog: function (id) {
+            _dialogs.delete(id);
+        },
+        showDialog: function (id) {
+            const dialog = _dialogs.get(id);
+            if (!dialog) {
+                throw new Error(`Cannot find a dialog associated with id '${id}'.`);
+            }
+
+            try {
+                dialog.showPicker();
+                return '';
+            } catch (error) {
+                return error.message;
+            }
+        },
+        setMultiple: function (id, value) {
+            const dialog = _dialogs.get(id);
+            if (!dialog) {
+                throw new Error(`Cannot find a dialog associated with id '${id}'.`);
+            }
+
+            if (value) {
+                dialog.setAttribute('multiple', 'multiple');
+            } else {
+                dialog.removeAttribute('multiple');
+            }
+        },
+        setAccept: function (id, value) {
+            const dialog = _dialogs.get(id);
+            if (!dialog) {
+                throw new Error(`Cannot find a dialog associated with id '${id}'.`);
+            }
+
+            if (value) {
+                dialog.setAttribute('accept', value);
+            } else {
+                dialog.removeAttribute('accept');
+            }
+        },
+    };
+})();
 
 document.browserService = (function () {
     const JSTYPE = {

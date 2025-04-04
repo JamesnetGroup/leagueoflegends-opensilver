@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Leagueoflegends">
     <Application.Resources>
-        <ResourceDictionary>
-            
-        </ResourceDictionary>
     </Application.Resources>
+    <Application.Theme>
+        <mt:ModernTheme CurrentPalette="Light" xmlns:mt="http://opensilver.net/themes/modern" />
+    </Application.Theme>
 </Application>

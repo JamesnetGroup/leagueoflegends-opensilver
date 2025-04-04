@@ -38,11 +38,15 @@ body {
     -webkit-user-select: text; /* 'none' prevents copy paste. 'text' allows it. */
 }
 
-.opensilver-mouse-captured {
+.opensilver-pointer-captured {
     -moz-user-select: none; /* Firefox */
     -webkit-user-select: none; /* Chrome, Safari, and Opera */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
+}
+
+.opensilver-root-element {
+    touch-action: none; /* prevents the browser from cancelling pointermove events */
 }
 
 .uielement-collapsed {
@@ -68,6 +72,7 @@ body {
     pointer-events: none;
     z-index: 0;
     outline: none;
+    transform-origin: 0% 0%;
 }
 
 .opensilver-shape {
@@ -85,11 +90,19 @@ body {
     background-clip: padding-box !important;
 }
 
+.opensilver-window {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    transform-origin: 0% 0%;
+}
+
 .opensilver-popup {
     position: absolute;
     width: 100%;
     height: 100%;
     overflow: clip;
+    z-index: 2147483647;
 }
 
 .opensilver-inkpresenter {
@@ -106,9 +119,53 @@ body {
     overflow: visible;
 }
 
-.opensilver-textelement {
+.opensilver-inline {
+    display: inline;
     line-height: var(--line-stacking-strategy, normal);
 }
+
+.opensilver-block {
+    display: block;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: transparent; /* CSS default value matches the color property (currentcolor) */
+    border-width: 0px; /* CSS default value is medium */
+    background-clip: padding-box !important;
+}
+
+.opensilver-textboxview {
+    font-size: inherit;
+    font-family: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+    border: none;
+    background: transparent;
+    padding: 0;
+    resize: none;
+    cursor: text;
+    overflow: hidden;
+    tab-size: 4;
+}
+
+    .opensilver-textboxview:focus::selection {
+        color: var(--selection-color, HighlightText);
+        background-color: var(--selection-bg-color, Highlight);
+    }
+
+.opensilver-passwordboxview {
+    font-size: inherit;
+    font-family: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+    .opensilver-passwordboxview:focus::selection {
+        color: var(--selection-color, HighlightText);
+        background-color: var(--selection-bg-color, Highlight);
+    }
 
 /* Media query used for printing (cf. "CSHTML5.Native.Html.Printing.PrintManager") */
 @media print {
