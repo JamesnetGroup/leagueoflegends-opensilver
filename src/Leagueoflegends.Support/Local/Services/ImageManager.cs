@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace Leagueoflegends.Support.Local.Services
 {
-    public class ImageManager
+    public class    ImageManager
     {
         static ImageManager()
         {
@@ -65,6 +65,6 @@ namespace Leagueoflegends.Support.Local.Services
         public static ImageSource CaitlynWallpaperImageSource => new BitmapImage(new Uri($"{ImagePath}/wallpaper-caitlyn.jpg", UriKind.RelativeOrAbsolute));
 
         public static ImageSource GitHubSource => new BitmapImage(new Uri($"{ImagePath}/publish/github.png", UriKind.RelativeOrAbsolute));
-        public static ImageSource OpenSilverSource => new BitmapImage(new Uri($"{ImagePath}/publish/opensilver.png", UriKind.RelativeOrAbsolute));
+        public static ImageSource OpenSilverSource => new BitmapImage(new Uri($"{ImagePath}/publish/opensilver2.png", UriKind.RelativeOrAbsolute));
     }
 }
