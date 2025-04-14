@@ -52,7 +52,7 @@ public class LeagueOfLegendsBootstrapper : AppBootstrapper
         ViewModelMapper.Register<VoiceContent, VoiceContentViewModel>();
     }
 
-    protected override void RegisterViewModels()
+    protected override void RegisterViewModels(IViewModelMapper viewModelMapper)
     {
         Container.RegisterSingleton<IMenuManager, MenuManager>();
 
