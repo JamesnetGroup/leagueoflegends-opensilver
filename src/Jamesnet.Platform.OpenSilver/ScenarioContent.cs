@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Net.Mail;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -122,7 +123,7 @@ public class ContentSwitcher : ContentControl
         if (this.DataContext != null)
         {
             var binding = new Binding();
-            binding.Source = this.DataContext;
+            binding.Source = DataContext;
             binding.Path = new PropertyPath("IconType");
 
             BindingOperations.SetBinding(contentCase, ContentCase.SourceValueProperty, binding);
