@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Jamesnet.Foundation" Version="9.1.6" />
-    <PackageReference Include="Jamesnet.Platform.OpenSilver" Version="9.1.6" />
+    <PackageReference Include="Jamesnet.Foundation" Version="9.1.8" />
+    <PackageReference Include="Jamesnet.Platform.OpenSilver" Version="9.1.8" />
     <PackageReference Include="OpenSilver" Version="3.2.0" />
     <PackageReference Include="OpenSilver.Themes.Modern" Version="3.2.0" />
   </ItemGroup>
