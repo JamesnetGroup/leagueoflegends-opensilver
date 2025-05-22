@@ -4,91 +4,90 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:units="clr-namespace:Leagueoflegends.Support.UI.Units">
 
-    <Geometry x:Key="ThumbData">M12 2C11.5 2 11 2.19 10.59 2.59L2.59 10.59C1.8 11.37 1.8 12.63 2.59 13.41L10.59 21.41C11.37 22.2 12.63 22.2 13.41 21.41L21.41 13.41C22.2 12.63 22.2 11.37 21.41 10.59L13.41 2.59C13 2.19 12.5 2 12 2M12 4L15.29 7.29L12 10.59L8.71 7.29L12 4M7.29 8.71L10.59 12L7.29 15.29L4 12L7.29 8.71M16.71 8.71L20 12L16.71 15.29L13.41 12L16.71 8.71M12 13.41L15.29 16.71L12 20L8.71 16.71L12 13.41Z</Geometry>
+    <Geometry x:Key="ThumbIcon">
+        M12 2C11.5 2 11 2.19 10.59 2.59L2.59 10.59C1.8 11.37 1.8 12.63 2.59 13.41L10.59 21.41C11.37 22.2 12.63 22.2 13.41 21.41L21.41 13.41C22.2 12.63 22.2 11.37 21.41 10.59L13.41 2.59C13 2.19 12.5 2 12 2M12 4L15.29 7.29L12 10.59L8.71 7.29L12 4M7.29 8.71L10.59 12L7.29 15.29L4 12L7.29 8.71M16.71 8.71L20 12L16.71 15.29L13.41 12L16.71 8.71M12 13.41L15.29 16.71L12 20L8.71 16.71L12 13.41Z
+    </Geometry>
 
-    <LinearGradientBrush x:Key="ThumbColorBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+    <LinearGradientBrush x:Key="ThumbFill" StartPoint="0.5, 0" EndPoint="0.5, 1">
         <GradientStop Color="#B79248" Offset="0"/>
         <GradientStop Color="#997530" Offset="0.5"/>
         <GradientStop Color="#74592B" Offset="1"/>
     </LinearGradientBrush>
 
-    <SolidColorBrush x:Key="SliderColorBrush" Color="#1E2328"/>
+    <LinearGradientBrush x:Key="ThumbFillOver" StartPoint="0.5, 0" EndPoint="0.5, 1">
+        <GradientStop Color="#EDE1C8" Offset="0"/>
+        <GradientStop Color="#DCC088" Offset="0.5"/>
+        <GradientStop Color="#CBA14A" Offset="1"/>
+    </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="RangeColorBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+    <LinearGradientBrush x:Key="ThumbFillDrag" StartPoint="0.5, 0" EndPoint="0.5, 1">
+        <GradientStop Color="#473814" Offset="0"/>
+        <GradientStop Color="#57421B" Offset="0.5"/>
+        <GradientStop Color="#684E23" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="SliderFill" StartPoint="0, 0.5" EndPoint="1, 0.5">
         <GradientStop Color="#463714" Offset="0"/>
         <GradientStop Color="#58471D" Offset="0.5"/>
         <GradientStop Color="#695625" Offset="1"/>
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="SliderOverBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+    <LinearGradientBrush x:Key="SliderFillOver" StartPoint="0, 0.5" EndPoint="1, 0.5">
         <GradientStop Color="#795B28" Offset="0"/>
         <GradientStop Color="#C1963B" Offset="0.5"/>
         <GradientStop Color="#C8AA6D" Offset="1"/>
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="SliderDragBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+    <LinearGradientBrush x:Key="SliderFillDrag" StartPoint="0, 0.5" EndPoint="1, 0.5">
         <GradientStop Color="#685524" Offset="0"/>
         <GradientStop Color="#55441B" Offset="0.5"/>
         <GradientStop Color="#463714" Offset="1"/>
     </LinearGradientBrush>
 
-    <SolidColorBrush x:Key="DisabledSliderBrush" Color="#223A3F44"/>
-
-    <Style x:Key="SliderContainerStyle" TargetType="Grid">
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-
-    <Style x:Key="ThumbPathStyle" TargetType="Path">
-        <Setter Property="Data" Value="{StaticResource ThumbData}"/>
-        <Setter Property="Fill" Value="{StaticResource ThumbColorBrush}"/>
-        <Setter Property="Width" Value="24"/>
-        <Setter Property="Height" Value="24"/>
-    </Style>
-
-    <Style x:Key="HorizontalLineStyle" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource SliderColorBrush}"/>
-        <Setter Property="Height" Value="2.5"/>
-        <Setter Property="Grid.Row" Value="1"/>
-        <Setter Property="Grid.ColumnSpan" Value="3"/>
-    </Style>
-
-    <Style x:Key="SelectionRangeStyle" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource SliderDragBrush}"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="Height" Value="2.5"/>
-        <Setter Property="Grid.Row" Value="1"/>
-    </Style>
-
-    <Style x:Key="HorizontalThumbStyle" TargetType="Thumb">
-        <Setter Property="Grid.Column" Value="1"/>
-        <Setter Property="Grid.Row" Value="0"/>
-        <Setter Property="Grid.RowSpan" Value="3"/>
-        <Setter Property="Width" Value="24"/>
-        <Setter Property="Height" Value="24"/>
+    <Style TargetType="Thumb" x:Key="Thumb">
+        <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
-                    <Grid Background="Transparent">
+                    <Grid HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              UseLayoutRounding="True"
+                              Background="Transparent">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Normal" />
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ThumbPath" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SliderOverBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="path" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ThumbFillOver}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="path" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="#5C5B67" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ThumbPath" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SliderDragBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="path" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ThumbFillDrag}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Path x:Name="ThumbPath" Style="{StaticResource ThumbPathStyle}"/>
+                        <Viewbox Width="24" Height="24">
+                            <Path x:Name="path" 
+						              Data="{StaticResource ThumbIcon}"
+						              Fill="{StaticResource ThumbFill}"
+						              Width="24"
+						              Height="24"
+						              Margin="0 0 0 0">
+                            </Path>
+                        </Viewbox>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -96,68 +95,125 @@
     </Style>
 
     <Style TargetType="units:RiotSlider">
-        <Setter Property="Background" Value="{StaticResource SliderColorBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource RangeColorBrush}"/>
-        <Setter Property="Maximum" Value="100"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Maximum" Value="10"/>
         <Setter Property="Minimum" Value="0"/>
-        <!--<Setter Property="SelectionStart" Value="0"/>-->
-        <!--<Setter Property="SelectionEnd" Value="{Binding RelativeSource={RelativeSource Self}, Path=Value}"/>-->
-        <Setter Property="BorderThickness" Value="0"/>
-        <!--<Setter Property="TickFrequency" Value="1"/>-->
+        <Setter Property="Value" Value="0"/>
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="units:RiotSlider">
-                    <Grid x:Name="RootGrid">
+                    <Grid x:Name="Root">
+                        <Grid.Resources>
+                            <ControlTemplate x:Key="RepeatButtonTemplate">
+                                <Grid x:Name="Root" Opacity="0" Background="Transparent"/>
+                            </ControlTemplate>
+                        </Grid.Resources>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal"/>
-                                <VisualState x:Name="MouseOver">
+                                <VisualState x:Name="Normal">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_SelectionRange" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SliderOverBrush}"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_SelectionRange" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SliderDragBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalTrackLargeChangeDecreaseRepeatButton" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SliderFill}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_SelectionRange" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource DisabledSliderBrush}"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalThumb" Storyboard.TargetProperty="Opacity">
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalTrackRectangleDisabledOverlay"
+                                                                           Storyboard.TargetProperty="Visibility"
+                                                                           Duration="0">
                                             <DiscreteObjectKeyFrame KeyTime="0">
                                                 <DiscreteObjectKeyFrame.Value>
-                                                    <system:Double>0.5</system:Double>
+                                                    <Visibility>Visible</Visibility>
                                                 </DiscreteObjectKeyFrame.Value>
                                             </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ThumbDisabledOverlay"
+                                                                           Storyboard.TargetProperty="Visibility"
+                                                                           Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalTrackRectangleDisabledOverlay"
+                                                                           Storyboard.TargetProperty="Visibility"
+                                                                           Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalTrackLargeChangeDecreaseRepeatButton" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SliderFillOver}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalTrackLargeChangeDecreaseRepeatButton" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SliderFillDrag}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Grid x:Name="SliderContainer" Style="{StaticResource SliderContainerStyle}">
-                            <Grid x:Name="HorizontalTemplate">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Border Style="{StaticResource HorizontalLineStyle}"/>
-                                <Border x:Name="PART_SelectionRange" Style="{StaticResource SelectionRangeStyle}"/>
-                                <!--<Track x:Name="PART_Track" Grid.ColumnSpan="3" Grid.Row="1">
-                                    <Track.Thumb>
-                                        <Thumb x:Name="HorizontalThumb" Style="{StaticResource HorizontalThumbStyle}"/>
-                                    </Track.Thumb>
-                                </Track>-->
-                            </Grid>
+                        <!-- Horizontal Template -->
+                        <Grid x:Name="HorizontalTemplate"
+                                  Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Track Layer -->
+                            <Border x:Name="TrackRectangle"
+                                        BorderThickness="0"
+                                        Background="#1E2328"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Height="2.5"
+                                        CornerRadius="1"
+                                        Margin="5,0,5,0" />
+
+                            <Border x:Name="HorizontalTrackRectangleDisabledOverlay"
+                                        Visibility="Collapsed"
+                                        Background="White"
+                                        Opacity=".55"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Height="3"
+                                        CornerRadius="1"
+                                        Margin="5,0,5,0" />
+
+                            <!-- Repeat Buttons + Thumb -->
+                            <RepeatButton x:Name="HorizontalTrackLargeChangeDecreaseRepeatButton"
+                                              Height="2.5"
+                                              IsTabStop="False"
+                                              Background="{StaticResource SliderFill}"
+                                              Grid.Column="0"/>
+                            <Thumb Height="24"
+                                       Style="{StaticResource Thumb}"
+                                       x:Name="HorizontalThumb" 
+                                       Width="24"
+                                       Grid.Column="1"
+                                       IsTabStop="True">
+                            </Thumb>
+                            <RepeatButton x:Name="HorizontalTrackLargeChangeIncreaseRepeatButton"
+                                              Height="18"
+                                              IsTabStop="False"
+                                              Template="{StaticResource RepeatButtonTemplate}"
+                                              Grid.Column="2"/>
                         </Grid>
                     </Grid>
                 </ControlTemplate>
